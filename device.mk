@@ -386,6 +386,7 @@ PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += $(LOCAL_PATH)/overlay/packages/apps/Car
 
 # Overlays (RRO)
 PRODUCT_PACKAGES += \
+    ApertureOverlay \
     WifiOverlayM2012K11AC \
     WifiOverlayM2012K11AG \
     WifiOverlayM2012K11AI \
