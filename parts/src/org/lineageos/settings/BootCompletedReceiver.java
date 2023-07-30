@@ -28,8 +28,8 @@ import androidx.preference.PreferenceManager;
 
 import org.lineageos.settings.doze.DozeUtils;
 import org.lineageos.settings.doze.PocketService;
-import org.lineageos.settings.thermal.ThermalUtils;
 import org.lineageos.settings.refreshrate.RefreshUtils;
+import org.lineageos.settings.thermal.ThermalUtils;
 import org.lineageos.settings.utils.FileUtils;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
@@ -38,6 +38,8 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     private static final String TAG = "XiaomiParts";
     private static final String DC_DIMMING_ENABLE_KEY = "dc_dimming_enable";
     private static final String DC_DIMMING_NODE = "/sys/devices/platform/soc/soc:qcom,dsi-display-primary/dimlayer_exposure";
+    private static final String HBM_ENABLE_KEY = "hbm_mode";
+    private static final String HBM_NODE = "/sys/class/drm/card0/card0-DSI-1/disp_param";
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -51,5 +53,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
 
         boolean dcDimmingEnabled = sharedPrefs.getBoolean(DC_DIMMING_ENABLE_KEY, false);
         FileUtils.writeLine(DC_DIMMING_NODE, dcDimmingEnabled ? "1" : "0");
+        boolean hbmEnabled = sharedPrefs.getBoolean(HBM_ENABLE_KEY, false);
+        FileUtils.writeLine(HBM_NODE, hbmEnabled ? "0x10000" : "0xF0000");
     }
 }

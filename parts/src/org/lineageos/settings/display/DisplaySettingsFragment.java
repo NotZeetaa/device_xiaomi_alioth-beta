@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2018 The LineageOS Project
+ * Copyright (C) 2020 YAAP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +27,19 @@ import androidx.preference.SwitchPreference;
 import org.lineageos.settings.R;
 import org.lineageos.settings.utils.FileUtils;
 
-public class DcDimmingSettingsFragment extends PreferenceFragment implements
+public class DisplaySettingsFragment extends PreferenceFragment implements
         OnPreferenceChangeListener {
 
     private SwitchPreference mDcDimmingPreference;
     private static final String DC_DIMMING_ENABLE_KEY = "dc_dimming_enable";
     private static final String DC_DIMMING_NODE = "/sys/devices/platform/soc/soc:qcom,dsi-display-primary/dimlayer_exposure";
+    private SwitchPreference mHBMPreference;
+    private static final String HBM_ENABLE_KEY = "hbm_mode";
+    private static final String HBM_NODE = "/sys/class/drm/card0/card0-DSI-1/disp_param";
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        addPreferencesFromResource(R.xml.dcdimming_settings);
+        addPreferencesFromResource(R.xml.display_settings);
         mDcDimmingPreference = (SwitchPreference) findPreference(DC_DIMMING_ENABLE_KEY);
         if (FileUtils.fileExists(DC_DIMMING_NODE)) {
             mDcDimmingPreference.setEnabled(true);
@@ -44,12 +48,23 @@ public class DcDimmingSettingsFragment extends PreferenceFragment implements
             mDcDimmingPreference.setSummary(R.string.dc_dimming_enable_summary_not_supported);
             mDcDimmingPreference.setEnabled(false);
         }
+        mHBMPreference = (SwitchPreference) findPreference(HBM_ENABLE_KEY);
+        if (FileUtils.fileExists(HBM_NODE)) {
+            mHBMPreference.setEnabled(true);
+            mHBMPreference.setOnPreferenceChangeListener(this);
+        } else {
+            mHBMPreference.setSummary(R.string.kernel_not_supported);
+            mHBMPreference.setEnabled(false);
+        }
     }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (DC_DIMMING_ENABLE_KEY.equals(preference.getKey())) {
             FileUtils.writeLine(DC_DIMMING_NODE, (Boolean) newValue ? "1":"0");
+        }
+        if (HBM_ENABLE_KEY.equals(preference.getKey())) {
+            FileUtils.writeLine(HBM_NODE, (Boolean) newValue ? "0x10000" : "0xF0000");
         }
         return true;
     }
