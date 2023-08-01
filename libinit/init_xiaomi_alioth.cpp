@@ -14,7 +14,7 @@ static const variant_info_t aliothin_info = {
     .sku_value = "",
 
     .mod_device = "alioth_global",
-    .name = "alioth_in",
+    .name = "alioth_global",
     .brand = "Mi",
     .device = "aliothin",
     .marketname = "Mi 11X",
