@@ -13,7 +13,7 @@ static const variant_info_t aliothin_info = {
     .hwc_value = "INDIA",
     .sku_value = "",
 
-    .mod_device = "alioth_in_global",
+    .mod_device = "alioth_global",
     .name = "alioth_in",
     .brand = "Mi",
     .device = "aliothin",
